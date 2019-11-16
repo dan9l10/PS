@@ -1,0 +1,18 @@
+---
+- name: Configure and install web server
+  hosts: all
+  become: yes
+
+  vars:
+    sfile: ./html.html
+    dfile: /var/www/html
+
+  tasks:
+  - name: Install
+    apt: name=httpd state=latest 
+  
+  - name: copy file
+    copy: src={{ sfile }}  dest={{ dfile }} 
+
+  - name: config serv
+    service: name=httpd state=started enabled=yes
