@@ -1,5 +1,7 @@
 ---
 - name: Configure and install web server
+  vars_files:
+    - ./global_vars.yml
   hosts: all
   become: yes
 
@@ -8,11 +10,9 @@
     dfile: /var/www/html
 
   tasks:
-  - name: Install
-    apt: name=httpd state=latest 
-  
-  - name: copy file
-    copy: src={{ sfile }}  dest={{ dfile }} 
 
-  - name: config serv
+  - name: Install
+    apt: name={{ package_name }} state=latest 
+    copy: src={{ sfile }}  dest={{ dfile }} 
     service: name=httpd state=started enabled=yes
+   
