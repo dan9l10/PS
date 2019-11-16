@@ -4,10 +4,9 @@
     - ./global_vars.yml
   hosts: all
   become: yes
-
+  
   vars:
-    sfile: ./html.html
-    dfile: /var/www/html
+    changed_p: 8081
 
   tasks:
 
@@ -15,4 +14,12 @@
     apt: name={{ package_name }} state=latest 
     copy: src={{ sfile }}  dest={{ dfile }} 
     service: name=httpd state=started enabled=yes
-   
+
+  - name: Config 
+    lineinfile: dest=/etc/apache2/ports.conf regexp="^Listen 80" line="Listen {{ changed_p }}" state=present
+    notify:
+      -restart apache2
+
+  handlers:
+  - name: restart apache2
+    service: name=apache2
